@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-samarth-bg: #0f1115;
+  --color-samarth-card: #16191f;
+  --color-samarth-border: #2a2e37;
+  --color-samarth-primary: #3b82f6;
+  --color-samarth-primaryHover: #2563eb;
+  --color-samarth-success: #10b981;
+  --color-samarth-warning: #f59e0b;
+  --color-samarth-danger: #ef4444;
+  --color-samarth-text: #f8fafc;
+  --color-samarth-textSecondary: #94a3b8;
+  
+  --font-sans: "Inter", "system-ui", "sans-serif";
+}
+
+@layer base {
+  body {
+    @apply bg-samarth-bg text-samarth-text font-sans antialiased;
+  }
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-samarth-bg;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-samarth-border rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-samarth-textSecondary;
+}
