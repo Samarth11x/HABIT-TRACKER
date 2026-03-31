@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { useEffect, ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import clsx from 'clsx';
 
 interface ModalProps {

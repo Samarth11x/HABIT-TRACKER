@@ -6,7 +6,7 @@ import { useStore } from '../store/useStore';
 import { BarChart3, Briefcase, BookOpen, Activity, ChevronRight, ChevronLeft } from 'lucide-react';
 
 export function WeeklyReset() {
-  const { weeklyResets } = useStore();
+  const weeklyResets = useStore(state => state.weeklyResets);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState(1);
   

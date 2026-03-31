@@ -4,12 +4,15 @@ import { useStore } from '../store/useStore';
 import { Moon, Trash2, User, Download } from 'lucide-react';
 
 export function Settings() {
-  const { resetData } = useStore();
+  const resetData = useStore(state => state.resetData);
 
   const handleReset = () => {
-    if (window.confirm("Are you sure you want to reset all mock data? This reinstates the default mock state.")) {
+    if (window.confirm("Are you sure you want to reset all data? This will wipe your local changes and restore the default state.")) {
       resetData();
-      alert("Data reset to default mock state.");
+      localStorage.removeItem('samarth-os-storage');
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     }
   };
 

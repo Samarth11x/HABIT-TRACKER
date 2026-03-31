@@ -77,11 +77,11 @@ export const useStore = create<AppState>()(
       })),
 
       resetData: () => set(() => ({
-        dailyOS: mockDailyOS,
-        trades: mockTrades,
-        businessEntries: mockBusinessEntries,
-        studyEntries: mockStudyEntries,
-        weeklyResets: mockWeeklyResets,
+        dailyOS: { ...mockDailyOS },
+        trades: [...mockTrades],
+        businessEntries: [...mockBusinessEntries],
+        studyEntries: [...mockStudyEntries],
+        weeklyResets: [...mockWeeklyResets],
         isSidebarOpen: false,
       }))
     }),

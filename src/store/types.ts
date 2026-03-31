@@ -12,9 +12,10 @@ export interface DailyOS {
     moneyTaskDone: boolean;
     studyTaskDone: boolean;
     bodyTaskDone: boolean;
-    tradingRulesFollowed: boolean;
     tomorrowTop3Written: boolean;
   };
+  preTradeChecklist?: Record<string, boolean>;
+  postTradeChecklist?: Record<string, boolean>;
   disciplineScore: number; // /10
   mood: string;
   energy: string;
@@ -63,6 +64,7 @@ export interface BusinessEntry {
   pendingEntry: boolean;
   customerFollowUp: string;
   notes: string;
+  paymentMethodDistribution?: { cashPercentage: number; upiPercentage: number };
 }
 
 export interface StudyEntry {

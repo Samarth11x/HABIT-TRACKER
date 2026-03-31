@@ -9,7 +9,6 @@ import {
   Zap, 
   CheckCircle2, 
   AlertCircle, 
-  Clock, 
   BookOpen, 
   Briefcase, 
   Plus, 
@@ -20,10 +19,11 @@ import {
 
 export function Dashboard() {
   const today = format(new Date(), 'yyyy-MM-dd');
-  const { dailyOS, trades } = useStore();
+  const dailyOS = useStore(state => state.dailyOS);
+  const trades = useStore(state => state.trades);
   
-  const todayOS = dailyOS['2026-03-25'] || dailyOS[today] || null;
-  const todayTrades = trades.filter(t => t.date === '2026-03-25' || t.date === today);
+  const todayOS = dailyOS[today] || null;
+  const todayTrades = trades.filter(t => t.date === today);
   const todayPnl = todayTrades.reduce((sum, t) => sum + (typeof t.pnl === 'number' ? t.pnl : 0), 0);
 
   return (

@@ -7,11 +7,13 @@ import { Plus, Check, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
 
 export function BusinessTracker() {
-  const { businessEntries, addBusinessEntry } = useStore();
+  const businessEntries = useStore(state => state.businessEntries);
+  const addBusinessEntry = useStore(state => state.addBusinessEntry);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [newEntry, setNewEntry] = useState({
     totalSales: 0,
+    totalPieces: 0,
     expense: 0,
     notes: ''
   });
@@ -22,16 +24,20 @@ export function BusinessTracker() {
       date: format(new Date(), 'yyyy-MM-dd'),
       salesEntered: true,
       totalSales: newEntry.totalSales,
+      totalPieces: 0,
       expense: newEntry.expense,
       netProfit: newEntry.totalSales - newEntry.expense,
+      cashCollected: (newEntry.totalSales - newEntry.expense) * 0.33,
+      upiCollected: (newEntry.totalSales - newEntry.expense) * 0.67,
+      pendingEntry: false,
+      customerFollowUp: '',
       notes: newEntry.notes,
       paymentMethodDistribution: { cashPercentage: 33, upiPercentage: 67 }
     });
     setIsModalOpen(false);
-    setNewEntry({ totalSales: 0, expense: 0, notes: '' });
+    setNewEntry({ totalSales: 0, totalPieces: 0, expense: 0, notes: '' });
   };
 
-  const totalSales = businessEntries.reduce((sum, e) => sum + e.totalSales, 0);
   const totalNet = businessEntries.reduce((sum, e) => sum + e.netProfit, 0);
 
   return (
@@ -106,7 +112,7 @@ export function BusinessTracker() {
               </div>
               <div>
                 <p className="text-xs font-semibold text-samarth-textSecondary uppercase tracking-wide">Total Sales (7d)</p>
-                <p className="text-2xl font-bold text-samarth-text">${totalSales.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-samarth-text">${businessEntries.reduce((sum, e) => sum + e.totalSales, 0).toFixed(2)}</p>
               </div>
             </div>
           </Card>

@@ -4,7 +4,8 @@ import { useStore } from '../store/useStore';
 import clsx from 'clsx';
 
 export function AppLayout() {
-  const { isSidebarOpen, setSidebarOpen } = useStore();
+  const isSidebarOpen = useStore(state => state.isSidebarOpen);
+  const setSidebarOpen = useStore(state => state.setSidebarOpen);
 
   return (
     <div className="min-h-screen flex bg-samarth-bg">

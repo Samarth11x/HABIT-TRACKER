@@ -5,6 +5,7 @@ import { Modal } from '../components/Modal';
 import { Checkbox } from '../components/Checkbox';
 import { useStore } from '../store/useStore';
 import { Plus, Clock, BookOpen, Code, GraduationCap } from 'lucide-react';
+import { format } from 'date-fns';
 import clsx from 'clsx';
 
 const TYPE_ICONS = {
@@ -15,7 +16,9 @@ const TYPE_ICONS = {
 };
 
 export function StudyTracker() {
-  const { studyEntries, toggleStudyCompletion, addStudyEntry } = useStore();
+  const studyEntries = useStore(state => state.studyEntries);
+  const toggleStudyCompletion = useStore(state => state.toggleStudyCompletion);
+  const addStudyEntry = useStore(state => state.addStudyEntry);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [newTask, setNewTask] = useState({
@@ -30,6 +33,7 @@ export function StudyTracker() {
   const handleAddTask = () => {
     addStudyEntry({
       id: crypto.randomUUID(),
+      date: format(new Date(), 'yyyy-MM-dd'),
       ...newTask,
       completed: false
     });

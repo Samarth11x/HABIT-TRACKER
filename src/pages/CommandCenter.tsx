@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
 import { Checkbox } from '../components/Checkbox';
-import { ShieldAlert, AlertTriangle, Crosshair, Ban } from 'lucide-react';
+import { ShieldAlert, AlertTriangle, Crosshair, Ban, Plus } from 'lucide-react';
+import { useStore } from '../store/useStore';
+import { Modal } from '../components/Modal';
+import { TradeForm } from '../components/TradeForm';
+import { format } from 'date-fns';
+import clsx from 'clsx';
 
 const PRE_TRADE_ITEMS = [
   'HTF bias clear (4H/1H)?',
@@ -24,15 +29,35 @@ const POST_TRADE_ITEMS = [
 ];
 
 export function CommandCenter() {
-  const [preChecks, setPreChecks] = useState<Record<string, boolean>>({});
-  const [postChecks, setPostChecks] = useState<Record<string, boolean>>({});
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const trades = useStore(state => state.trades);
+  const dailyOS = useStore(state => state.dailyOS);
+  const updateDailyOS = useStore(state => state.updateDailyOS);
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tradeDirection, setTradeDirection] = useState<'Win' | 'Loss' | 'Break-even'>('Win');
 
-  const togglePre = (item: string) => {
-    setPreChecks(prev => ({ ...prev, [item]: !prev[item] }));
+  const todayTrades = trades.filter(t => t.date === today);
+  const os = dailyOS[today] || {
+    preTradeChecklist: {},
+    postTradeChecklist: {}
   };
 
-  const togglePost = (item: string) => {
-    setPostChecks(prev => ({ ...prev, [item]: !prev[item] }));
+  const toggleCheck = (type: 'pre' | 'post', item: string) => {
+    const key = type === 'pre' ? 'preTradeChecklist' : 'postTradeChecklist';
+    const currentList = os[key as 'preTradeChecklist' | 'postTradeChecklist'] || {};
+    
+    updateDailyOS(today, {
+      [key]: {
+        ...currentList,
+        [item]: !currentList[item]
+      }
+    });
+  };
+
+  const handleOpenTrade = (direction: 'Win' | 'Loss' | 'Break-even') => {
+    setTradeDirection(direction);
+    setIsModalOpen(true);
   };
 
   return (
@@ -43,6 +68,15 @@ export function CommandCenter() {
           LIVE SESSION
         </div>
       }/>
+
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        title="Add New Trade"
+        maxWidth="lg"
+      >
+        <TradeForm onSuccess={() => setIsModalOpen(false)} initialOutcome={tradeDirection} />
+      </Modal>
       
       <div className="p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto w-full">
         {/* Main Live Window */}
@@ -57,24 +91,31 @@ export function CommandCenter() {
               Focus strictly on XAUUSD, 5M entry timeframe. Ensure all pre-trade checklist items are met before execution.
             </p>
             <div className="flex items-center gap-4 mt-8 w-full max-w-sm px-6">
-               <button className="flex-1 py-3 bg-samarth-success/10 text-samarth-success border border-samarth-success/30 rounded-lg font-bold hover:bg-samarth-success/20 transition-colors">
-                 LONG
+               <button 
+                 onClick={() => handleOpenTrade('Win')}
+                 className="flex-1 py-3 bg-samarth-success/10 text-samarth-success border border-samarth-success/30 rounded-lg font-bold hover:bg-samarth-success/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+               >
+                 <Plus className="w-4 h-4" /> LONG
                </button>
-               <button className="flex-1 py-3 bg-samarth-danger/10 text-samarth-danger border border-samarth-danger/30 rounded-lg font-bold hover:bg-samarth-danger/20 transition-colors">
-                 SHORT
+               <button 
+                 onClick={() => handleOpenTrade('Loss')}
+                 className="flex-1 py-3 bg-samarth-danger/10 text-samarth-danger border border-samarth-danger/30 rounded-lg font-bold hover:bg-samarth-danger/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+               >
+                 <Plus className="w-4 h-4" /> SHORT
                </button>
             </div>
+            <p className="mt-4 text-[10px] text-samarth-textSecondary uppercase tracking-widest font-bold">Quick Execution Mockup</p>
           </Card>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
-              <h3 className="text-base font-semibold text-samarth-text mb-4 border-b border-samarth-border pb-2 uppercase tracking-wider text-xs">Pre-Trade Checklist</h3>
+              <h3 className="text-sm font-bold text-samarth-text mb-4 border-b border-samarth-border pb-2 uppercase tracking-wider">Pre-Trade Checklist</h3>
               <div className="space-y-3">
                 {PRE_TRADE_ITEMS.map((item) => (
                   <Checkbox 
                     key={item}
-                    checked={!!preChecks[item]}
-                    onChange={() => togglePre(item)}
+                    checked={!!os.preTradeChecklist?.[item]}
+                    onChange={() => toggleCheck('pre', item)}
                     label={item}
                   />
                 ))}
@@ -82,13 +123,13 @@ export function CommandCenter() {
             </Card>
 
             <Card>
-              <h3 className="text-base font-semibold text-samarth-text mb-4 border-b border-samarth-border pb-2 uppercase tracking-wider text-xs">Post-Trade Checklist</h3>
+              <h3 className="text-sm font-bold text-samarth-text mb-4 border-b border-samarth-border pb-2 uppercase tracking-wider">Post-Trade Checklist</h3>
               <div className="space-y-3">
                 {POST_TRADE_ITEMS.map((item) => (
                   <Checkbox 
                     key={item}
-                    checked={!!postChecks[item]}
-                    onChange={() => togglePost(item)}
+                    checked={!!os.postTradeChecklist?.[item]}
+                    onChange={() => toggleCheck('post', item)}
                     label={item}
                   />
                 ))}
@@ -99,10 +140,17 @@ export function CommandCenter() {
 
         {/* Sidebar Status / Rules */}
         <div className="space-y-6">
-          <Card className="bg-gradient-to-br from-samarth-card items-center justify-center p-8 to-samarth-bg">
+          <Card className="bg-gradient-to-br from-samarth-card items-center justify-center p-8 to-samarth-bg border-samarth-primary/20">
              <p className="text-xs font-bold uppercase text-samarth-textSecondary tracking-widest mb-1">Session Limit</p>
-             <div className="text-5xl font-black text-samarth-text my-2">0 <span className="text-2xl text-samarth-textSecondary">/ 2</span></div>
-             <p className="text-sm text-samarth-textSecondary">Max Trades Permitted</p>
+             <div className={clsx(
+               "text-5xl font-black my-2",
+               todayTrades.length >= 2 ? "text-samarth-danger" : "text-samarth-text"
+             )}>
+               {todayTrades.length} <span className="text-2xl text-samarth-textSecondary">/ 2</span>
+             </div>
+             <p className="text-sm text-samarth-textSecondary font-medium">
+               {todayTrades.length >= 2 ? "LIMIT REACHED - STOP TRADING" : "Max Trades Permitted Today"}
+             </p>
           </Card>
 
           <Card className="border-samarth-danger/50 p-6 shadow-lg shadow-samarth-danger/5">

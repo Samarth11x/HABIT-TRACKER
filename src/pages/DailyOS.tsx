@@ -34,7 +34,8 @@ const SCHEDULE = [
 
 export function DailyOS() {
   const today = format(new Date(), 'yyyy-MM-dd');
-  const { dailyOS, updateDailyOS } = useStore();
+  const dailyOS = useStore(state => state.dailyOS);
+  const updateDailyOS = useStore(state => state.updateDailyOS);
   const [saveSuccess, setSaveSuccess] = useState(false);
   
   const os = dailyOS[today] || {

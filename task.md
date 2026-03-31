@@ -1,13 +1,35 @@
-# Task: Make App Installable (PWA)
-
 - [x] Planning and research <!-- id: 10 -->
     - [x] Analyze requirements <!-- id: 11 -->
     - [x] Create implementation plan <!-- id: 12 -->
-- [/] Implementation <!-- id: 13 -->
-    - [x] Generate PWA icons (192x192, 512x512) <!-- id: 14 -->
-    - [x] Create manifest.json in public directory <!-- id: 15 -->
-    - [x] Configure vite-plugin-pwa in vite.config.ts <!-- id: 16 -->
-    - [x] Update index.html with meta tags <!-- id: 17 -->
+- [x] Implementation <!-- id: 13 -->
+    - [x] Stop clearing local storage in main.tsx <!-- id: 14 -->
+    - [x] Fix hardcoded date logic in Dashboard.tsx <!-- id: 21 -->
+    - [x] Fix P/L negation for losses in TradingJournal.tsx <!-- id: 22 -->
+    - [x] Fix Reset Data logic in useStore.ts <!-- id: 23 -->
 - [x] Verification <!-- id: 18 -->
-    - [x] Verify manifest validity <!-- id: 19 -->
-    - [x] Test installation prompt <!-- id: 20 -->
+    - [x] Verify data persistence across refresh <!-- id: 19 -->
+    - [x] Verify dynamic date logic on Dashboard <!-- id: 20 -->
+    - [x] Verify P/L negation for losses <!-- id: 24 -->
+    - [x] Verify Reset Data clears journal entries <!-- id: 25 -->
+- [x] Performance Optimization: Refactor Zustand subscriptions to selectors
+    - [x] AppLayout.tsx
+    - [x] Sidebar.tsx
+    - [x] Dashboard.tsx
+    - [x] DailyOS.tsx
+    - [x] BusinessTracker.tsx
+    - [x] StudyTracker.tsx
+    - [x] WeeklyReset.tsx
+    - [x] TradingJournal.tsx
+    - [x] Settings.tsx
+    - [x] Header.tsx
+- [x] Data Reset & Cleanup
+    - [x] Clear `mockData.ts`
+    - [x] Improve `handleReset` in `Settings.tsx`
+- [x] Trading Command Center Functional Fixes
+    - [x] Extract `TradeForm.tsx` from `TradingJournal.tsx`
+    - [x] Use `TradeForm` in `CommandCenter.tsx` modal
+    - [x] Connect "Session Limit" to real data
+    - [x] Implement persistent checklists in store
+- [x] Final Verification & Build
+    - [x] Fix TypeScript/Build errors
+    - [x] Verify smooth performance

@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle, action }: HeaderProps) {
-  const { setSidebarOpen } = useStore();
+  const setSidebarOpen = useStore(state => state.setSidebarOpen);
 
   return (
     <header className="h-20 border-b border-samarth-border bg-samarth-bg/50 backdrop-blur-sm sticky top-0 z-10 flex items-center justify-between px-4 md:px-8">

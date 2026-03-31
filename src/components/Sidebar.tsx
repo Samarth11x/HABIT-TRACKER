@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   CheckSquare, 
@@ -29,8 +29,7 @@ const NAV_ITEMS = [
 ];
 
 export function Sidebar() {
-  const { isSidebarOpen, setSidebarOpen } = useStore();
-  const location = useLocation();
+  const setSidebarOpen = useStore(state => state.setSidebarOpen);
 
   const handleNavClick = () => {
     if (window.innerWidth < 1024) {
@@ -70,11 +69,15 @@ export function Sidebar() {
                   : "text-samarth-textSecondary hover:text-samarth-text hover:bg-samarth-bg/50"
               )}
             >
-              <Icon className={clsx(
-                "w-4 h-4 transition-transform duration-200 group-hover:scale-110",
-                "isActive" && "text-samarth-primary"
-              )} />
-              {item.name}
+              {({ isActive }) => (
+                <>
+                  <Icon className={clsx(
+                    "w-4 h-4 transition-transform duration-200 group-hover:scale-110",
+                    isActive && "text-samarth-primary"
+                  )} />
+                  {item.name}
+                </>
+              )}
             </NavLink>
           );
         })}
